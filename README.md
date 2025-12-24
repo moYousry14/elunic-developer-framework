@@ -1,23 +1,26 @@
-# Elunic Developer Framework (Replit Template) 🚀
+# Elunic Developer Framework (Replit Template)
 
-A standardized "Plug & Play" template designed to mirror the company's main ERP architecture (**ShopfloorGPT / "The Villa"**). This POC proves that high-end enterprise code can be developed in Replit and integrated into the main monorepo with **Zero DevOps overhead**.
+Standardized "Plug & Play" template for rapid ERP development, mirroring **"The Villa"** architecture.
 
-## 🏗️ Architecture Strategy
-- **Mono-Repo Structure:** Managed via **Nx** to ensure scalability and shared logic between API and Frontend.
-- **Plug & Play:** Designed as a seamless plugin; the entire `apps/` directory can be moved to the main company monorepo without code changes.
-- **Zero DevOps:** Pre-configured proxy and build targets to work instantly in cloud environments like Replit.
+## 🚀 Project Status: Day 2 - Foundations & Connectivity Proof
 
-## 🛠️ Tech Stack
-- **Frontend:** Angular 18+ (Standalone Components) + **PrimeNG 18** (Aura Theme).
-- **Backend:** **NestJS** (Enterprise Node.js Framework).
-- **Workspace:** **Nx Monorepo**.
+Currently, the framework is in the **POC (Proof of Concept)** stage, focusing on establishing a secure, scalable link between Angular 18 and NestJS.
 
-## 🚀 Getting Started
-```bash
-npm install
-npx nx run-many -t serve -p api frontend --parallel -- --host=0.0.0.0
-```
+### ✅ Completed Milestones
+- **Nx Monorepo Setup:** Unified workspace for `frontend` (Angular) and `api` (NestJS).
+- **UI/UX Standard:** Integrated **PrimeNG v18 (Aura Theme)** with standalone components.
+- **Shared Type Safety:** Implemented `@elunic-workspace/shared-types` library to ensure data integrity across the stack.
+- **API Proxy:** Configured seamless communication between the client (4200) and server (3000).
+- **Mock Authentication:** Fully functional login flow with consistent business logic.
 
----
-**Status:** Internal POC - Testing Phase.
-**Author:** Elunic Hybrid Tech Lead Team.
+### 🛠 Tech Stack
+- **Frontend:** Angular 18+, PrimeNG, ng-icons.
+- **Backend:** NestJS (Enterprise Node.js Framework).
+- **Monorepo:** Nx Tools.
+- **Persistence:** Ready for PostgreSQL (via TypeORM).
+
+### 📖 How to Run
+1. Install dependencies: `npm install`
+2. Start both apps: 
+   ```bash
+   npx nx run-many -t serve -p api frontend --parallel -- --host=0.0.0.0
