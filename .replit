@@ -7,6 +7,7 @@ requiredFiles = [".replit", "replit.nix", "package.json", "package-lock.json"]
 
 [nix]
 channel = "stable-24_11"
+packages = ["killall"]
 
 [deployment]
 run = ["node", "index.js"]
@@ -27,4 +28,3 @@ externalPort = 4200
 [[ports]]
 localPort = 9229
 externalPort = 80
-exposeLocalhost = true
