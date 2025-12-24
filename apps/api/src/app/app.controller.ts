@@ -1,17 +1,13 @@
 import { Controller, Post, Body } from '@nestjs/common';
+import { AppService } from './app.service';
+import { AuthResponse, LoginPayload } from '@elunic-workspace/shared-types';
 
 @Controller()
 export class AppController {
+  constructor(private readonly appService: AppService) {}
 
-  @Post('login') 
-  login(@Body() body: any) {
-    console.log('Received login request:', body);
-
-    // Mock response for testing
-    return {
-      message: 'Login Successful! ✅',
-      user: body.email,
-      token: 'fake-jwt-token-for-testing'
-    };
+  @Post('login')
+  async login(@Body() loginData: LoginPayload): Promise<AuthResponse> {
+    return await this.appService.validateUser(loginData);
   }
 }

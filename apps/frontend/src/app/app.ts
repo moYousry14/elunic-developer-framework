@@ -9,6 +9,9 @@ import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { MessageModule } from 'primeng/message'; 
 
+// Import shared types for end-to-end type safety
+import { AuthResponse, LoginPayload } from '@elunic-workspace/shared-types';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -23,26 +26,42 @@ import { MessageModule } from 'primeng/message';
 export class AppComponent {
   private http = inject(HttpClient); 
 
-  title = 'ERP System';
-  email: string = '';
-  password: string = '';
-  loginResult: any = null; 
+  title = 'Elunic ERP POC';
+
+  // Using properties that match our shared LoginPayload
+  username = '';
+  password = '';
+
+  // Typed response instead of 'any'
+  loginResult: AuthResponse | null = null; 
 
   login() {
-    console.log('Sending to Backend via Proxy...');
+    console.log('Initiating secure login via Proxy...');
 
-    this.http.post('/api/login', {
-      email: this.email,
+    const payload: LoginPayload = {
+      username: this.username,
       password: this.password
-    }).subscribe({
-      next: (response) => {
-        console.log('Success:', response);
-        this.loginResult = response; 
-      },
-      error: (err) => {
-        console.error('Error:', err);
-        alert('Connection Failed! Check console for details.');
-      }
-    });
+    };
+
+    // Post request with explicit generic type
+    this.http.post<AuthResponse>('/api/login', payload)
+      .subscribe({
+        next: (response) => {
+          console.log('Server Response:', response);
+          this.loginResult = response;
+
+          // Example of accessing typed data
+          if (response.success) {
+            console.log(`Welcome back, ${response.user?.username}! Role: ${response.user?.role}`);
+          }
+        },
+        error: (err) => {
+          console.error('Authentication Error:', err);
+          this.loginResult = {
+            success: false,
+            message: 'Connection failed. Please check if the API is running.'
+          };
+        }
+      });
   }
 }
