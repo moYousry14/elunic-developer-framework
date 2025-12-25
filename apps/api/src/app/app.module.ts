@@ -2,19 +2,23 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { User } from './user.entity'; // This entity maps to the DB table
+import { User } from './user.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      // Stable Supabase connection string
-      url: 'postgresql://postgres.oyyosqfzvzojjndvwyql:ElunicPass2025@aws-0-eu-central-1.pooler.supabase.com:6543/postgres',
+      host: 'db.oyyosqfzvzojjndvwyql.supabase.co',
+      port: 5432,
+      username: 'postgres.oyyosqfzvzojjndvwyql',
+      password: 'ElunicPass2025',
+      database: 'postgres',
       entities: [User],
-      synchronize: true, // Auto-creates table if it doesn't exist
+      synchronize: true,
       ssl: {
         rejectUnauthorized: false,
       },
+      logging: true,
     }),
     TypeOrmModule.forFeature([User]),
   ],
