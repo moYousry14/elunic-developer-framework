@@ -1,27 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
 import { AuthResponse, LoginPayload } from '@elunic-workspace/shared-types';
 
 @Injectable()
 export class AppService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
+
+  // Login Logic from Database
   async validateUser(loginData: LoginPayload): Promise<AuthResponse> {
-    // Reverting to Mock Data for stability
-    if (loginData.username === 'admin' && loginData.password === 'password123') {
+    const user = await this.userRepository.findOne({ 
+      where: { username: loginData.username } 
+    });
+
+    if (user) {
       return {
         success: true,
-        message: 'Login Successful (Mock Data) ✅',
+        message: 'Login Successful from Real Database! ✅',
         user: {
-          id: '1',
-          username: 'admin',
-          email: 'admin@elunic.com',
-          role: 'admin',
+          id: user.id.toString(),
+          username: user.username,
+          email: `${user.username}@elunic.com`,
+          role: user.role as any,
         },
-        accessToken: 'mock-jwt-token'
+        accessToken: 'real-db-jwt-token'
       };
     }
 
     return {
       success: false,
-      message: 'Invalid credentials ❌'
+      message: 'User not found in Real Database! ❌'
     };
+  }
+
+  // Fetch all users for the Dashboard later
+  async findAllUsers(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 }

@@ -50,9 +50,9 @@
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "options": {
-        "allowedHosts": [
-          "d2096c66-2918-4035-ab16-96246ced62bc-00-kd9tnoba6scq.janeway.replit.dev"
-        ]
+        "allowedHosts": true,
+        "port": 5000,
+        "host": "0.0.0.0"
       },
       "configurations": {
         "production": {
@@ -61,9 +61,7 @@
         "development": {
           "buildTarget": "frontend:build:development",
           "proxyConfig": "apps/frontend/proxy.conf.json",
-          "allowedHosts": [
-            "d2096c66-2918-4035-ab16-96246ced62bc-00-kd9tnoba6scq.janeway.replit.dev"
-          ]
+          "allowedHosts": true
         }
       },
       "defaultConfiguration": "development"
