@@ -37,8 +37,8 @@ exposeLocalhost = true
 [userenv]
 
 [userenv.shared]
-SUPABASE_HOST = "db.oyyosqfzvzojjndvwyql.supabase.co"
-SUPABASE_PORT = "5432"
+SUPABASE_HOST = "aws-0-eu-central-1.pooler.supabase.com"
+SUPABASE_PORT = "6543"
 SUPABASE_USER = "postgres.oyyosqfzvzojjndvwyql"
 SUPABASE_DB = "postgres"
 

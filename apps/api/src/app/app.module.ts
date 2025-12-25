@@ -8,15 +8,17 @@ import { User } from './user.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env['DATABASE_URL'],
+      host: 'aws-0-eu-central-1.pooler.supabase.com',
+      port: 5432,
+      username: 'postgres.oyyosqfzvzojjndvwyql',
+      password: process.env['SUPABASE_PASSWORD'],
+      database: 'postgres',
       entities: [User],
       synchronize: true,
-      ssl: true, // Aiven mandates SSL
-      extra: {
-        ssl: {
-          rejectUnauthorized: false, // For Replit environment stability
-        },
+      ssl: {
+        rejectUnauthorized: false,
       },
+      logging: true,
     }),
     TypeOrmModule.forFeature([User]),
   ],

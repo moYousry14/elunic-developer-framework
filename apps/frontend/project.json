@@ -47,12 +47,13 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "continuous": true,
       "executor": "@angular/build:dev-server",
       "options": {
-        "allowedHosts": true,
+        "buildTarget": "frontend:build",
         "port": 5000,
-        "host": "0.0.0.0"
+        "host": "0.0.0.0",
+        "liveReload": false,
+        "hmr": false
       },
       "configurations": {
         "production": {
@@ -61,7 +62,8 @@
         "development": {
           "buildTarget": "frontend:build:development",
           "proxyConfig": "apps/frontend/proxy.conf.json",
-          "allowedHosts": true
+          "liveReload": false,
+          "hmr": false
         }
       },
       "defaultConfiguration": "development"

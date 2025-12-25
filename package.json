@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "devDependencies": {
+    "@angular-devkit/build-angular": "^21.0.4",
     "@angular-devkit/core": "~21.0.0",
     "@angular-devkit/schematics": "~21.0.0",
     "@angular/build": "~21.0.0",
@@ -67,6 +68,7 @@
     "primeng": "^21.0.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
+    "sqlite3": "^5.1.7",
     "typeorm": "^0.3.28"
   }
 }
