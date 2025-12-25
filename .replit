@@ -32,7 +32,6 @@ externalPort = 80
 [[ports]]
 localPort = 9229
 externalPort = 80
-exposeLocalhost = true
 
 [userenv]
 
@@ -52,32 +51,16 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Frontend"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "API"
+args = "Dev Server"
 
 [[workflows.workflow]]
-name = "Frontend"
+name = "Dev Server"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npx nx serve frontend"
+args = "npx nx run-many -t serve -p api frontend --parallel -- --host=0.0.0.0"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
-
-[[workflows.workflow]]
-name = "API"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npx nx serve api"
-waitForPort = 3000
-
-[workflows.workflow.metadata]
-outputType = "console"
