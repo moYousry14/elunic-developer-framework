@@ -8,16 +8,14 @@ import { User } from './user.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'aws-0-eu-central-1.pooler.supabase.com',
-      port: 5432,
-      username: 'postgres.oyyosqfzvzojjndvwyql',
-      password: process.env['SUPABASE_PASSWORD'],
-      database: 'postgres',
+      host: process.env['PGHOST'],
+      port: parseInt(process.env['PGPORT'] || '5432'),
+      username: process.env['PGUSER'],
+      password: process.env['PGPASSWORD'],
+      database: process.env['PGDATABASE'],
       entities: [User],
       synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: false,
       logging: true,
     }),
     TypeOrmModule.forFeature([User]),

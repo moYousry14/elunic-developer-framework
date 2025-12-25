@@ -28,7 +28,7 @@ async function bootstrap() {
       role: 'admin',
     });
     await userRepository.save(admin);
-    Logger.log('✅ Default Admin user created in SQLite database');
+    Logger.log('✅ Default Admin user created in PostgreSQL database');
   } else {
     Logger.log('ℹ️ Admin user already exists in database');
   }
