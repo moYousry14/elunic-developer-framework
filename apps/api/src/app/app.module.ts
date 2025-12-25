@@ -8,17 +8,15 @@ import { User } from './user.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db.oyyosqfzvzojjndvwyql.supabase.co',
-      port: 5432,
-      username: 'postgres.oyyosqfzvzojjndvwyql',
-      password: 'ElunicPass2025',
-      database: 'postgres',
+      url: process.env['DATABASE_URL'],
       entities: [User],
       synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
+      ssl: true, // Aiven mandates SSL
+      extra: {
+        ssl: {
+          rejectUnauthorized: false, // For Replit environment stability
+        },
       },
-      logging: true,
     }),
     TypeOrmModule.forFeature([User]),
   ],
