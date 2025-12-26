@@ -1,28 +1,29 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static'; 
+import { join } from 'path'; 
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), 'dist/apps/frontend'),
+      rootPath: join(process.cwd(), 'dist', 'apps', 'frontend'),
       exclude: ['/api/*'],
     }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env['PGHOST'],
-      port: parseInt(process.env['PGPORT'] || '5432'),
-      username: process.env['PGUSER'],
-      password: process.env['PGPASSWORD'],
-      database: process.env['PGDATABASE'],
+      host: process.env.PGHOST || 'localhost',
+      port: parseInt(process.env.PGPORT || '5432'),
+      username: process.env.PGUSER || 'postgres',
+      password: process.env.PGPASSWORD || 'postgres',
+      database: process.env.PGDATABASE || 'postgres',
       entities: [User],
       synchronize: true,
-      ssl: false,
-      logging: true,
+      ssl: false, 
     }),
     TypeOrmModule.forFeature([User]),
   ],

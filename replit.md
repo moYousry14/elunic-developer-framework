@@ -21,17 +21,24 @@ Preferred communication style: Simple, everyday language.
 - **Solution**: Nx workspace with apps in `apps/` directory and libraries in `libs/`
 - **Rationale**: The entire `apps/` directory can be moved to the company's main monorepo without code changes
 
+### Single Port Architecture
+- **Port**: 5000 (NestJS serves both API and static frontend)
+- **Static Files**: Angular production build served from `dist/apps/frontend/`
+- **API Routes**: All `/api/*` routes handled by NestJS controllers
+- **Static Module**: `@nestjs/serve-static` configured to exclude `/api/*`
+
 ### Frontend Architecture
 - **Framework**: Angular 18+ with standalone components (no NgModules required)
 - **UI Library**: PrimeNG 18 with Aura theme
-- **Build Tool**: Angular CLI with Vite for development
-- **API Proxy**: Configured in `proxy.conf.json` to forward `/api` requests to backend on port 3000
+- **Build Tool**: Webpack-based `@angular-devkit/build-angular:browser` (not Vite, to avoid WebSocket issues in Replit)
+- **HMR/LiveReload**: Disabled for Replit compatibility
 
 ### Backend Architecture
 - **Framework**: NestJS (enterprise Node.js framework)
 - **Build Tool**: Webpack with `@nx/webpack/app-plugin`
 - **API Prefix**: All routes prefixed with `/api`
-- **Port**: Runs on port 3000 (or `PORT` environment variable)
+- **Port**: Runs on port 5000 (via `PORT` environment variable)
+- **Static Serving**: Serves Angular frontend via `@nestjs/serve-static`
 
 ### Shared Types Library
 - **Location**: `libs/shared-types`
@@ -77,10 +84,12 @@ Preferred communication style: Simple, everyday language.
 # Install dependencies
 npm install
 
-# Run both frontend and backend in parallel
-npx nx run-many -t serve -p api frontend --parallel -- --host=0.0.0.0
+# Build frontend for production
+npx nx build frontend --configuration=production
 
-# Build specific project
-npx nx build api
-npx nx build frontend
+# Run API (serves both API and static frontend on port 5000)
+PORT=5000 npx nx serve api --configuration=development
+
+# Or build and run in one command
+npx nx build frontend --configuration=production && PORT=5000 npx nx serve api --configuration=development
 ```
