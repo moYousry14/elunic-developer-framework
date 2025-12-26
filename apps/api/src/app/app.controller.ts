@@ -1,20 +1,25 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthResponse, LoginPayload } from '@elunic-workspace/shared-types';
+import { DataResponse } from '@elunic-workspace/api-interfaces';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getStatus() {
+  getStatus(): DataResponse<{ status: string; message: string; version: string; endpoints: Record<string, string> }> {
     return {
-      status: 'ok',
-      message: 'Elunic ERP API is running',
-      version: '1.0.0',
-      endpoints: {
-        login: 'POST /api/login'
-      }
+      data: {
+        status: 'ok',
+        message: 'Elunic ERP API is running',
+        version: '1.0.0',
+        endpoints: {
+          login: 'POST /api/login',
+          products: 'GET /api/products'
+        }
+      },
+      meta: {}
     };
   }
 

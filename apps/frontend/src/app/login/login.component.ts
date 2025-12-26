@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -11,6 +11,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { MessageModule } from 'primeng/message';
 
 import { AuthResponse, LoginPayload } from '@elunic-workspace/shared-types';
+import { SharedSessionService } from '@elunic-workspace/sio-common';
+import { UserMeDto } from '@elunic-workspace/api-interfaces';
 
 @Component({
   selector: 'app-login',
@@ -31,33 +33,40 @@ import { AuthResponse, LoginPayload } from '@elunic-workspace/shared-types';
         <div class="flex flex-column gap-4">
           <div class="field">
             <p-floatLabel>
-              <input pInputText id="username" [(ngModel)]="username" class="w-full" />
+              <input pInputText id="username" [ngModel]="username()" (ngModelChange)="username.set($event)" class="w-full" />
               <label for="username">Username or Email</label>
             </p-floatLabel>
           </div>
 
           <div class="field" style="margin-top: 25px;">
             <p-floatLabel>
-              <p-password id="password" [(ngModel)]="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"></p-password>
+              <p-password id="password" [ngModel]="password()" (ngModelChange)="password.set($event)" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"></p-password>
               <label for="password">Password</label>
             </p-floatLabel>
           </div>
 
           <div style="margin-top: 25px;">
-            <p-button label="Login" (onClick)="login()" styleClass="w-full" icon="pi pi-sign-in"></p-button>
+            <p-button label="Login" (onClick)="login()" styleClass="w-full" icon="pi pi-sign-in" [loading]="isLoading()"></p-button>
           </div>
 
           <hr style="margin: 20px 0; border: 0; border-top: 1px solid #dee2e6;" />
 
-          <div *ngIf="loginResult" class="text-center">
-            <p-message *ngIf="loginResult.success" severity="success" [text]="loginResult.message" styleClass="w-full"></p-message>
-            <p-message *ngIf="!loginResult.success" severity="error" [text]="loginResult.message" styleClass="w-full"></p-message>
-            
-            <div *ngIf="loginResult.user" style="margin-top: 10px; font-size: 0.9em; color: #666;">
-              Welcome back, <strong>{{ loginResult.user.username }}</strong>! <br>
-              Role: <span class="badge">{{ loginResult.user.role }}</span>
+          @if (loginResult()) {
+            <div class="text-center">
+              @if (loginResult()?.success) {
+                <p-message severity="success" [text]="loginResult()?.message || ''" styleClass="w-full"></p-message>
+              } @else {
+                <p-message severity="error" [text]="loginResult()?.message || ''" styleClass="w-full"></p-message>
+              }
+              
+              @if (loginResult()?.user) {
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                  Welcome back, <strong>{{ loginResult()?.user?.username }}</strong>! <br>
+                  Role: <span class="badge">{{ loginResult()?.user?.role }}</span>
+                </div>
+              }
             </div>
-          </div>
+          }
         </div>
       </p-card>
     </div>
@@ -67,37 +76,48 @@ import { AuthResponse, LoginPayload } from '@elunic-workspace/shared-types';
 export class LoginComponent {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private sessionService = inject(SharedSessionService);
 
-  username = '';
-  password = '';
-  loginResult: AuthResponse | null = null;
+  username = signal('');
+  password = signal('');
+  loginResult = signal<AuthResponse | null>(null);
+  isLoading = signal(false);
 
   login() {
-    console.log('Initiating secure login via Proxy...');
+    this.isLoading.set(true);
 
     const payload: LoginPayload = {
-      username: this.username,
-      password: this.password
+      username: this.username(),
+      password: this.password()
     };
 
     this.http.post<AuthResponse>('/api/login', payload)
       .subscribe({
         next: (response) => {
-          console.log('Server Response:', response);
-          this.loginResult = response;
+          this.loginResult.set(response);
+          this.isLoading.set(false);
 
           if (response.success && response.user) {
-            console.log(`Welcome back, ${response.user.username}! Role: ${response.user.role}`);
-            localStorage.setItem('user', JSON.stringify(response.user));
+            const userDto: UserMeDto = {
+              id: response.user.id || '',
+              username: response.user.username,
+              email: response.user.email || '',
+              role: response.user.role
+            };
+            this.sessionService.setUser(userDto);
+            if (response.accessToken) {
+              localStorage.setItem('accessToken', response.accessToken);
+            }
             this.router.navigate(['/dashboard']);
           }
         },
         error: (err) => {
           console.error('Authentication Error:', err);
-          this.loginResult = {
+          this.isLoading.set(false);
+          this.loginResult.set({
             success: false,
             message: 'Connection failed. Please check if the API is running.'
-          };
+          });
         }
       });
   }

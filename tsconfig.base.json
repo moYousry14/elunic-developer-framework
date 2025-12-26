@@ -8,14 +8,16 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@elunic-workspace/shared-types": ["libs/shared-types/src/index.ts"]
+      "@elunic-workspace/shared-types": ["libs/shared-types/src/index.ts"],
+      "@elunic-workspace/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@elunic-workspace/sio-common": ["libs/sio-common/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

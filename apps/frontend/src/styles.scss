@@ -1,13 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
-/* Reset CSS  */
-html, body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-family); 
-    height: 100%;
-    background-color: #f8f9fa; 
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
+
+@layer tailwind-base {
+  @tailwind base;
 }
 
-
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
 
 @import "primeicons/primeicons.css";
+
+:root {
+  --font-family: 'Oxygen', sans-serif;
+  --primary-color: #0090D4;
+  --surface-ground: #ececec;
+  --surface-section: #ffffff;
+  --surface-card: #ffffff;
+  --text-color: #333333;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  height: 100%;
+  background-color: var(--surface-ground);
+}
+
+.sio-card {
+  background: var(--surface-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.sio-header {
+  background: var(--primary-color);
+  color: white;
+}

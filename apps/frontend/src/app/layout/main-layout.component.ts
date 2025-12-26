@@ -1,11 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { AvatarModule } from 'primeng/avatar';
 import { DrawerModule } from 'primeng/drawer';
 import { MenuItem } from 'primeng/api';
+import { SharedSessionService } from '@elunic-workspace/sio-common';
 
 @Component({
   selector: 'app-main-layout',
@@ -30,19 +31,19 @@ import { MenuItem } from 'primeng/api';
           </div>
         </div>
         <div class="topbar-right">
-          <p-avatar [label]="userInitial" shape="circle" size="large" (click)="userMenu.toggle($event)" styleClass="cursor-pointer"></p-avatar>
-          <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
+          <p-avatar [label]="userInitials()" shape="circle" size="large" (click)="userMenu.toggle($event)" styleClass="cursor-pointer"></p-avatar>
+          <p-menu #userMenu [model]="userMenuItems()" [popup]="true"></p-menu>
         </div>
       </div>
 
       <div class="layout-content-wrapper">
         <!-- Sidebar for Desktop -->
-        <div class="layout-sidebar" [class.collapsed]="sidebarCollapsed">
+        <div class="layout-sidebar" [class.collapsed]="sidebarCollapsed()">
           <p-menu [model]="navItems" styleClass="w-full border-none"></p-menu>
         </div>
 
         <!-- Mobile Drawer -->
-        <p-drawer [(visible)]="mobileSidebarVisible" [modal]="true" styleClass="w-72">
+        <p-drawer [visible]="mobileSidebarVisible()" (visibleChange)="mobileSidebarVisible.set($event)" [modal]="true" styleClass="w-72">
           <ng-template pTemplate="header">
             <span class="font-semibold text-xl">Menu</span>
           </ng-template>
@@ -50,7 +51,7 @@ import { MenuItem } from 'primeng/api';
         </p-drawer>
 
         <!-- Main Content -->
-        <div class="layout-main" [class.sidebar-collapsed]="sidebarCollapsed">
+        <div class="layout-main" [class.sidebar-collapsed]="sidebarCollapsed()">
           <router-outlet></router-outlet>
         </div>
       </div>
@@ -169,11 +170,13 @@ import { MenuItem } from 'primeng/api';
   `]
 })
 export class MainLayoutComponent {
-  private router = inject(Router);
+  private sessionService = inject(SharedSessionService);
 
-  sidebarCollapsed = false;
-  mobileSidebarVisible = false;
-  userInitial = 'U';
+  sidebarCollapsed = signal(false);
+  mobileSidebarVisible = signal(false);
+
+  userInitials = this.sessionService.userInitials;
+  userDisplayName = this.sessionService.userDisplayName;
 
   navItems: MenuItem[] = [
     {
@@ -193,10 +196,11 @@ export class MainLayoutComponent {
     }
   ];
 
-  userMenuItems: MenuItem[] = [
+  userMenuItems = computed<MenuItem[]>(() => [
     {
-      label: 'Profile',
-      icon: 'pi pi-user'
+      label: this.userDisplayName(),
+      icon: 'pi pi-user',
+      disabled: true
     },
     {
       label: 'Settings',
@@ -210,36 +214,17 @@ export class MainLayoutComponent {
       icon: 'pi pi-sign-out',
       command: () => this.logout()
     }
-  ];
-
-  constructor() {
-    this.loadUserData();
-  }
-
-  loadUserData() {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      try {
-        const user = JSON.parse(userData);
-        if (user.username) {
-          this.userInitial = user.username.charAt(0).toUpperCase();
-        }
-      } catch (e) {
-        console.error('Error parsing user data');
-      }
-    }
-  }
+  ]);
 
   toggleSidebar() {
     if (window.innerWidth <= 991) {
-      this.mobileSidebarVisible = !this.mobileSidebarVisible;
+      this.mobileSidebarVisible.update(v => !v);
     } else {
-      this.sidebarCollapsed = !this.sidebarCollapsed;
+      this.sidebarCollapsed.update(v => !v);
     }
   }
 
   logout() {
-    localStorage.removeItem('user');
-    this.router.navigate(['/login']);
+    this.sessionService.logout();
   }
 }
