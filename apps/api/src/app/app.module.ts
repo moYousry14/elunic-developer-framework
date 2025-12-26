@@ -8,22 +8,19 @@ import { User } from './user.entity';
 
 @Module({
   imports: [
-    // The Standard Enterprise way to serve static files
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'frontend'), // Fixed path for NX
-      renderPath: '/', // Handle all routes except /api
+      rootPath: join(process.cwd(), 'dist/apps/frontend'),
     }),
-
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.PGHOST || 'localhost',
-      port: parseInt(process.env.PGPORT || '5432'),
-      username: process.env.PGUSER || 'postgres',
-      password: process.env.PGPASSWORD || 'postgres',
-      database: process.env.PGDATABASE || 'postgres',
+      host: process.env.PGHOST,
+      port: 5432,
+      username: process.env.PGUSER,
+      password: process.env.PGPASSWORD,
+      database: process.env.PGDATABASE,
       entities: [User],
       synchronize: true,
-      ssl: false, 
+      ssl: false,
     }),
     TypeOrmModule.forFeature([User]),
   ],
