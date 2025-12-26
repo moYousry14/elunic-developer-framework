@@ -32,6 +32,15 @@ Preferred communication style: Simple, everyday language.
 - **UI Library**: PrimeNG 18 with Aura theme
 - **Build Tool**: Webpack-based `@angular-devkit/build-angular:browser` (not Vite, to avoid WebSocket issues in Replit)
 - **HMR/LiveReload**: Disabled for Replit compatibility
+- **State Management**: Angular Signals for reactive state
+- **Dependency Injection**: `inject()` function pattern (no constructor injection)
+- **CSS**: Tailwind CSS with `tw-` prefix (preflight: false to not conflict with PrimeNG)
+
+### Styling & Theme (sioDefault Palette)
+- **Primary Color**: `#0090D4`
+- **Body Background**: `#ececec`
+- **Font Family**: Oxygen (Google Fonts)
+- **CSS Layers**: primeng, primeflex, tailwind (organized in styles.scss)
 
 ### Backend Architecture
 - **Framework**: NestJS (enterprise Node.js framework)
@@ -40,11 +49,28 @@ Preferred communication style: Simple, everyday language.
 - **Port**: Runs on port 5000 (via `PORT` environment variable)
 - **Static Serving**: Serves Angular frontend via `@nestjs/serve-static`
 
-### Shared Types Library
+### Shared Libraries
+
+#### shared-types
 - **Location**: `libs/shared-types`
 - **Purpose**: End-to-end type safety between frontend and backend
 - **Types Defined**: `UserProfile`, `AuthResponse`, `LoginPayload`
 - **Import Path**: `@elunic-workspace/shared-types`
+
+#### api-interfaces
+- **Location**: `libs/api-interfaces`
+- **Purpose**: API response contracts and DTOs
+- **Types Defined**: `DataResponse<T>`, `UserMeDto`
+- **Import Path**: `@elunic-workspace/api-interfaces`
+- **DataResponse Pattern**: All API responses wrapped in `{ data: T, meta: Record<string, unknown> }`
+
+#### sio-common
+- **Location**: `libs/sio-common`
+- **Purpose**: Shared Angular components and services (ShopfloorGPT pattern)
+- **Exports**: `SharedSessionService`, `AuthInterceptor`, `HeaderComponent`
+- **Import Path**: `@elunic-workspace/sio-common`
+- **SharedSessionService**: Uses Angular Signals (`currentUser`, `isLoggedIn`, `initializeService`)
+- **AuthInterceptor**: Handles 401/403 responses and redirects to login
 
 ### Database Layer
 - **ORM**: TypeORM
