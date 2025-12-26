@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ServeStaticModule } from '@nestjs/serve-static'; 
-import { join } from 'path'; 
-
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,9 +8,10 @@ import { User } from './user.entity';
 
 @Module({
   imports: [
+    // The Standard Enterprise way to serve static files
     ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), 'dist', 'apps', 'frontend'),
-      exclude: ['/api/*'],
+      rootPath: join(__dirname, '..', 'frontend'), // Fixed path for NX
+      renderPath: '/', // Handle all routes except /api
     }),
 
     TypeOrmModule.forRoot({
