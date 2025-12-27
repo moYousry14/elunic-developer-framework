@@ -1,20 +1,20 @@
 # Elunic Developer Framework (Replit Template)
 
-Standardized **"Plug & Play"** framework designed to mirror **"The Villa"** (ShopfloorGPT Monorepo) architecture for zero-overhead feature migration [cite: 2025-12-24].
+Standardized **"Plug & Play"** framework designed to mirror **"The Villa"** (ShopfloorGPT Monorepo) architecture for zero-overhead feature migration.
 
 ## 🏛️ Architectural Strategy: The Workshop Concept
-This repository acts as **"The Workshop"**, a rapid R&D sandbox where new modules are built under strict Elunic Golden Stack governance [cite: 2025-12-24, 2025-12-22]. 
-* **Mirroring:** Folder structures, library paths, and naming conventions match the main Monorepo [cite: 2025-12-24].
+This repository acts as **"The Workshop"**, a rapid R&D sandbox where new modules are built under strict Elunic Golden Stack governance. 
+* **Mirroring:** Folder structures, library paths, and naming conventions match the main Monorepo.
 * **Isolation:** Strict usage of CSS prefixing and modular logic to ensure seamless "Copy/Paste" into production.
 
 ## 🚀 Project Status: Milestone 1 - Plug & Play Success
-We have successfully proven that AI-governed development can produce enterprise-ready modules that integrate with zero configuration changes [cite: 2025-12-24].
+We have successfully proven that AI-governed development can produce enterprise-ready modules that integrate with zero configuration changes .
 
 ### ✅ Completed Milestones
 * **Nx Monorepo Architecture:** Standardized `apps/` and `libs/` structure for scalable development.
 * **Styling Governance:** Mandatory **`tw-` prefix** for Tailwind CSS to prevent global style collisions in "The Villa".
 * **Modern Angular Standards:** 100% implementation of **Signals** and the **`inject()` pattern** (Functional DI).
-* **Plug & Play Proof:** Successfully generated and integrated the **`system-health`** module alongside existing apps using shared libraries [cite: 2025-12-24].
+* **Plug & Play Proof:** Successfully generated and integrated the **`system-health`** module alongside existing apps using shared libraries .
 * **Data Integrity:** Global implementation of the **`DataResponse<T>`** wrapper for consistent API communication.
 
 ### 🛠 Tech Stack (The Golden Stack)
