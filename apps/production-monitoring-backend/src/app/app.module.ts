@@ -14,7 +14,7 @@ import { ProductionService } from './production/production.service';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), 'dist/apps/frontend'), 
+      rootPath: join(process.cwd(), 'dist/apps/production-monitoring-frontend'), 
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

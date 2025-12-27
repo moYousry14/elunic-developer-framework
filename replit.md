@@ -14,6 +14,20 @@ The architecture consists of:
 
 Preferred communication style: Simple, everyday language.
 
+## Elunic Golden Stack Standards
+
+### Naming Conventions
+- **Frontend App**: `production-monitoring-frontend`
+- **Backend App**: `production-monitoring-backend`
+- All apps follow the `{domain}-{type}` naming pattern for "The Villa" compatibility
+
+### Tech Stack Enforcement
+- **UI Components**: PrimeNG 18 (mandatory)
+- **Tailwind CSS**: All classes MUST use `tw-` prefix
+- **State Management**: Angular Signals only
+- **Dependency Injection**: `inject()` function pattern (no constructor injection)
+- **Backend Pattern**: Controller -> Service -> Entity
+
 ## System Architecture
 
 ### Monorepo Structure (Nx)
@@ -23,7 +37,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Single Port Architecture
 - **Port**: 5000 (NestJS serves both API and static frontend)
-- **Static Files**: Angular production build served from `dist/apps/frontend/`
+- **Static Files**: Angular production build served from `dist/apps/production-monitoring-frontend/`
 - **API Routes**: All `/api/*` routes handled by NestJS controllers
 - **Static Module**: `@nestjs/serve-static` configured to exclude `/api/*`
 
@@ -48,6 +62,7 @@ Preferred communication style: Simple, everyday language.
 - **API Prefix**: All routes prefixed with `/api`
 - **Port**: Runs on port 5000 (via `PORT` environment variable)
 - **Static Serving**: Serves Angular frontend via `@nestjs/serve-static`
+- **Pattern**: Controller -> Service -> Entity (Elunic standard)
 
 ### Shared Libraries
 
@@ -60,7 +75,7 @@ Preferred communication style: Simple, everyday language.
 #### api-interfaces
 - **Location**: `libs/api-interfaces`
 - **Purpose**: API response contracts and DTOs
-- **Types Defined**: `DataResponse<T>`, `UserMeDto`
+- **Types Defined**: `DataResponse<T>`, `UserMeDto`, `ProductionOrder`
 - **Import Path**: `@elunic-workspace/api-interfaces`
 - **DataResponse Pattern**: All API responses wrapped in `{ data: T, meta: Record<string, unknown> }`
 
@@ -75,19 +90,21 @@ Preferred communication style: Simple, everyday language.
 ### Database Layer
 - **ORM**: TypeORM
 - **Database**: Replit PostgreSQL (configured via PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE)
-- **Entity Location**: `apps/api/src/app/user.entity.ts`
+- **Entity Location**: `apps/production-monitoring-backend/src/app/user.entity.ts`
 - **Auto-Sync**: Schema synchronization enabled (`synchronize: true`)
 - **SSL**: Disabled (Replit PostgreSQL doesn't require SSL)
-- **Seeding**: Default admin user (admin/password123) created on application startup
+- **Seeding**: Default admin user created on application startup
+
+### Authentication
+- **Implementation**: Secure password validation against environment variable
+- **Admin Password**: Validated against `ADMIN_PASSWORD` environment variable (no hardcoded passwords)
+- **Empty Passwords**: Not allowed - rejected immediately
+- **Endpoint**: `POST /api/login`
+- **Response Format**: Returns `AuthResponse` with user profile and access token
 
 ### Default Credentials
 - **Username**: admin
-- **Password**: password123
-
-### Authentication
-- **Current Implementation**: Simple username-based login (no password hashing)
-- **Endpoint**: `POST /api/login`
-- **Response Format**: Returns `AuthResponse` with user profile and access token
+- **Password**: Set via ADMIN_PASSWORD environment variable
 
 ### Production Orders
 - **Endpoint**: `GET /api/production/orders`
@@ -106,6 +123,9 @@ Preferred communication style: Simple, everyday language.
   - `PGPASSWORD`: Database password
   - `PGDATABASE`: Database name
 
+### Secrets
+- `ADMIN_PASSWORD`: Required for admin user authentication
+
 ### Key NPM Packages
 - **Frontend**: `@angular/core`, `primeng`, `@primeng/themes`
 - **Backend**: `@nestjs/core`, `@nestjs/typeorm`, `typeorm`, `pg`
@@ -117,11 +137,11 @@ Preferred communication style: Simple, everyday language.
 npm install
 
 # Build frontend for production
-npx nx build frontend --configuration=production
+npx nx build production-monitoring-frontend --configuration=production
 
-# Run API (serves both API and static frontend on port 5000)
-PORT=5000 npx nx serve api --configuration=development
+# Run backend (serves both API and static frontend on port 5000)
+PORT=5000 npx nx serve production-monitoring-backend --configuration=development
 
 # Or build and run in one command
-npx nx build frontend --configuration=production && PORT=5000 npx nx serve api --configuration=development
+npx nx build production-monitoring-frontend --configuration=production && PORT=5000 npx nx serve production-monitoring-backend --configuration=development
 ```

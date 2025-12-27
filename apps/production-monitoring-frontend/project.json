@@ -1,28 +1,28 @@
 {
-  "name": "frontend",
+  "name": "production-monitoring-frontend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/frontend/src",
+  "sourceRoot": "apps/production-monitoring-frontend/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/frontend",
-        "index": "apps/frontend/src/index.html",
-        "main": "apps/frontend/src/main.ts",
+        "outputPath": "dist/apps/production-monitoring-frontend",
+        "index": "apps/production-monitoring-frontend/src/index.html",
+        "main": "apps/production-monitoring-frontend/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/frontend/tsconfig.app.json",
+        "tsConfig": "apps/production-monitoring-frontend/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/frontend/public"
+            "input": "apps/production-monitoring-frontend/public"
           }
         ],
-        "styles": ["apps/frontend/src/styles.scss"]
+        "styles": ["apps/production-monitoring-frontend/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -54,7 +54,7 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "buildTarget": "frontend:build",
+        "buildTarget": "production-monitoring-frontend:build",
         "port": 8000,
         "host": "0.0.0.0",
         "liveReload": false,
@@ -62,11 +62,11 @@
       },
       "configurations": {
         "production": {
-          "buildTarget": "frontend:build:production"
+          "buildTarget": "production-monitoring-frontend:build:production"
         },
         "development": {
-          "buildTarget": "frontend:build:development",
-          "proxyConfig": "apps/frontend/proxy.conf.json",
+          "buildTarget": "production-monitoring-frontend:build:development",
+          "proxyConfig": "apps/production-monitoring-frontend/proxy.conf.json",
           "liveReload": false,
           "hmr": false
         }
@@ -80,16 +80,16 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/frontend/jest.config.cts",
-        "tsConfig": "apps/frontend/tsconfig.spec.json"
+        "jestConfig": "apps/production-monitoring-frontend/jest.config.cts",
+        "tsConfig": "apps/production-monitoring-frontend/tsconfig.spec.json"
       }
     },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "frontend:build",
-        "staticFilePath": "dist/apps/frontend",
+        "buildTarget": "production-monitoring-frontend:build",
+        "staticFilePath": "dist/apps/production-monitoring-frontend",
         "spa": true
       }
     }
