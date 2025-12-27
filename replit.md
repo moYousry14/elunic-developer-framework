@@ -17,8 +17,8 @@ Preferred communication style: Simple, everyday language.
 ## Elunic Golden Stack Standards
 
 ### Naming Conventions
-- **Frontend App**: `production-monitoring-frontend`
-- **Backend App**: `production-monitoring-backend`
+- **Frontend App**: `production-monitoring-frontend`, `system-health-frontend`
+- **Backend App**: `production-monitoring-backend`, `system-health-backend`
 - All apps follow the `{domain}-{type}` naming pattern for "The Villa" compatibility
 
 ### Tech Stack Enforcement
@@ -37,9 +37,9 @@ Preferred communication style: Simple, everyday language.
 
 ### Single Port Architecture
 - **Port**: 5000 (NestJS serves both API and static frontend)
-- **Static Files**: Angular production build served from `dist/apps/production-monitoring-frontend/`
+- **Static Files**: Angular production build served from `dist/apps/{app-name}-frontend/`
 - **API Routes**: All `/api/*` routes handled by NestJS controllers
-- **Static Module**: `@nestjs/serve-static` configured to exclude `/api/*`
+- **Static Module**: `@nestjs/serve-static` configured for static file serving
 
 ### Frontend Architecture
 - **Framework**: Angular 18+ with standalone components (no NgModules required)
@@ -75,7 +75,7 @@ Preferred communication style: Simple, everyday language.
 #### api-interfaces
 - **Location**: `libs/api-interfaces`
 - **Purpose**: API response contracts and DTOs
-- **Types Defined**: `DataResponse<T>`, `UserMeDto`, `ProductionOrder`
+- **Types Defined**: `DataResponse<T>`, `UserMeDto`, `ProductionOrder`, `SystemHealthMetrics`
 - **Import Path**: `@elunic-workspace/api-interfaces`
 - **DataResponse Pattern**: All API responses wrapped in `{ data: T, meta: Record<string, unknown> }`
 
@@ -86,6 +86,23 @@ Preferred communication style: Simple, everyday language.
 - **Import Path**: `@elunic-workspace/sio-common`
 - **SharedSessionService**: Uses Angular Signals (`currentUser`, `isLoggedIn`, `initializeService`)
 - **AuthInterceptor**: Handles 401/403 responses and redirects to login
+
+## Application Modules
+
+### Production Monitoring Module
+- **Frontend**: `apps/production-monitoring-frontend`
+- **Backend**: `apps/production-monitoring-backend`
+- **Features**: Login, Dashboard with Production Orders, Inventory Management
+- **Database**: PostgreSQL with TypeORM
+
+### System Health Module
+- **Frontend**: `apps/system-health-frontend`
+- **Backend**: `apps/system-health-backend`
+- **Features**: Real-time CPU and Memory metrics visualization
+- **Endpoint**: `GET /api/system/health`
+- **Response Format**: `DataResponse<SystemHealthMetrics>`
+- **UI Components**: PrimeNG Knobs for CPU/Memory usage, ProgressBar for memory allocation
+- **Auto-refresh**: Metrics refresh every 5 seconds
 
 ### Database Layer
 - **ORM**: TypeORM
@@ -112,6 +129,12 @@ Preferred communication style: Simple, everyday language.
 - **ProductionOrder Fields**: id (string), name (string), status ('Running' | 'Idle' | 'Error'), progress (number)
 - **Dashboard Display**: PrimeNG Knob for overall efficiency, ProgressBars for individual orders
 
+### System Health
+- **Endpoint**: `GET /api/system/health`
+- **Response Format**: Returns `DataResponse<SystemHealthMetrics>`
+- **SystemHealthMetrics Fields**: cpu (usage, cores, model), memory (used, total, percentage), uptime, timestamp, status
+- **Dashboard Display**: PrimeNG Knobs for CPU/Memory, ProgressBar for memory allocation, status tags
+
 ## External Dependencies
 
 ### Database
@@ -136,12 +159,15 @@ Preferred communication style: Simple, everyday language.
 # Install dependencies
 npm install
 
-# Build frontend for production
+# Build Production Monitoring frontend
 npx nx build production-monitoring-frontend --configuration=production
 
-# Run backend (serves both API and static frontend on port 5000)
+# Run Production Monitoring backend (serves API and frontend on port 5000)
 PORT=5000 npx nx serve production-monitoring-backend --configuration=development
 
-# Or build and run in one command
-npx nx build production-monitoring-frontend --configuration=production && PORT=5000 npx nx serve production-monitoring-backend --configuration=development
+# Build System Health frontend
+npx nx build system-health-frontend --configuration=production
+
+# Run System Health backend (serves API and frontend on port 5000)
+PORT=5000 npx nx serve system-health-backend --configuration=development
 ```

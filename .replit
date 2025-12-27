@@ -54,6 +54,10 @@ author = "agent"
 task = "workflow.run"
 args = "Dev Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "System Health Server"
+
 [[workflows.workflow]]
 name = "Dev Server"
 author = "agent"
@@ -65,3 +69,15 @@ outputType = "webview"
 task = "shell.exec"
 args = "PORT=5000 npx nx serve production-monitoring-backend --configuration=development"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "System Health Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=5000 npx nx serve system-health-backend --configuration=development"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"

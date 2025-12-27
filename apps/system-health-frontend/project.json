@@ -1,0 +1,76 @@
+{
+  "name": "system-health-frontend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/system-health-frontend/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/system-health-frontend",
+        "index": "apps/system-health-frontend/src/index.html",
+        "main": "apps/system-health-frontend/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/system-health-frontend/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/system-health-frontend/public"
+          }
+        ],
+        "styles": ["apps/system-health-frontend/src/styles.scss"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "3mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "vendorChunk": true,
+          "namedChunks": true,
+          "buildOptimizer": false
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "buildTarget": "system-health-frontend:build",
+        "port": 8001,
+        "host": "0.0.0.0",
+        "liveReload": false,
+        "hmr": false
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "system-health-frontend:build:production"
+        },
+        "development": {
+          "buildTarget": "system-health-frontend:build:development",
+          "liveReload": false,
+          "hmr": false
+        }
+      },
+      "defaultConfiguration": "development"
+    }
+  }
+}
