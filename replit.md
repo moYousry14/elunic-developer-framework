@@ -89,6 +89,12 @@ Preferred communication style: Simple, everyday language.
 - **Endpoint**: `POST /api/login`
 - **Response Format**: Returns `AuthResponse` with user profile and access token
 
+### Production Orders
+- **Endpoint**: `GET /api/production/orders`
+- **Response Format**: Returns `DataResponse<ProductionOrder[]>` with mock orders
+- **ProductionOrder Fields**: id (string), name (string), status ('Running' | 'Idle' | 'Error'), progress (number)
+- **Dashboard Display**: PrimeNG Knob for overall efficiency, ProgressBars for individual orders
+
 ## External Dependencies
 
 ### Database
