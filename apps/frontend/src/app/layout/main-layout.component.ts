@@ -6,7 +6,7 @@ import { MenuModule } from 'primeng/menu';
 import { AvatarModule } from 'primeng/avatar';
 import { DrawerModule } from 'primeng/drawer';
 import { MenuItem } from 'primeng/api';
-import { SharedSessionService } from '@elunic-workspace/sio-common';
+import { SharedSessionService, HeaderComponent, HeaderConfig } from '@elunic-workspace/sio-common';
 
 @Component({
   selector: 'app-main-layout',
@@ -17,24 +17,13 @@ import { SharedSessionService } from '@elunic-workspace/sio-common';
     ButtonModule,
     MenuModule,
     AvatarModule,
-    DrawerModule
+    DrawerModule,
+    HeaderComponent
   ],
   template: `
     <div class="layout-wrapper">
-      <!-- Topbar -->
-      <div class="layout-topbar">
-        <div class="topbar-left">
-          <button pButton icon="pi pi-bars" class="p-button-text p-button-plain menu-toggle" (click)="toggleSidebar()"></button>
-          <div class="logo-container">
-            <i class="pi pi-box" style="font-size: 1.5rem; color: #3B82F6;"></i>
-            <span class="app-title">Elunic Workshop</span>
-          </div>
-        </div>
-        <div class="topbar-right">
-          <p-avatar [label]="userInitials()" shape="circle" size="large" (click)="userMenu.toggle($event)" styleClass="cursor-pointer"></p-avatar>
-          <p-menu #userMenu [model]="userMenuItems()" [popup]="true"></p-menu>
-        </div>
-      </div>
+      <!-- sio-header from sio-common library with sioDefault styling -->
+      <sio-header [config]="headerConfig"></sio-header>
 
       <div class="layout-content-wrapper">
         <!-- Sidebar for Desktop -->
@@ -104,8 +93,8 @@ import { SharedSessionService } from '@elunic-workspace/sio-common';
 
     .layout-content-wrapper {
       display: flex;
-      margin-top: 60px;
-      min-height: calc(100vh - 60px);
+      margin-top: 56px;
+      min-height: calc(100vh - 56px);
     }
 
     .layout-sidebar {
@@ -113,9 +102,9 @@ import { SharedSessionService } from '@elunic-workspace/sio-common';
       background: #ffffff;
       border-right: 1px solid #e5e7eb;
       position: fixed;
-      top: 60px;
+      top: 56px;
       left: 0;
-      height: calc(100vh - 60px);
+      height: calc(100vh - 56px);
       transition: width 0.3s ease;
       overflow-y: auto;
     }
@@ -171,6 +160,13 @@ import { SharedSessionService } from '@elunic-workspace/sio-common';
 })
 export class MainLayoutComponent {
   private sessionService = inject(SharedSessionService);
+
+  /** Configuration for the sio-header component */
+  headerConfig: HeaderConfig = {
+    title: 'Elunic Workshop',
+    showStatus: true,
+    appSwitcher: true
+  };
 
   sidebarCollapsed = signal(false);
   mobileSidebarVisible = signal(false);

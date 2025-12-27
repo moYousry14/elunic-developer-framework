@@ -8,11 +8,13 @@ import { User } from './user.entity';
 import { Product } from './entities/product.entity';
 import { ProductsController } from './products/products.controller';
 import { ProductsService } from './products/products.service';
+import { ProductionController } from './production/production.controller';
+import { ProductionService } from './production/production.service';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), 'dist/apps/frontend'),
+      rootPath: join(process.cwd(), 'dist/apps/frontend'), 
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -27,7 +29,7 @@ import { ProductsService } from './products/products.service';
     }),
     TypeOrmModule.forFeature([User, Product]),
   ],
-  controllers: [AppController, ProductsController],
-  providers: [AppService, ProductsService],
+  controllers: [AppController, ProductsController, ProductionController],
+  providers: [AppService, ProductsService, ProductionService],
 })
 export class AppModule {}
